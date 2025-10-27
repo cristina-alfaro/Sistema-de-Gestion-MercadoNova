@@ -1,11 +1,63 @@
 # 🛒  Sistema-de-Gestion-MercadoNova
 
 **¿Qué es  el Sistema-de-Gestion-MercadoNova?**  
-Es un sistema de base de datos completo diseñado para gestionar todas las operaciones de un supermercado (MercaNova): ventas, inventario, compras, clientes y empleados.
+Es un sistema de base de datos hibrido diseñado para gestionar todas las operaciones de un supermercado (MercaNova): ventas, inventario, compras, clientes y empleados.
+
+```md
+## 📁 ESTRUCTURA DEL PROYECTO
+
+La carpeta del proyecto está organizada para separar las implementaciones de **SQL Server** y **MongoDB**, junto con sus datasets y scripts correspondientes.
+
+```
+
+Sistema-de-Gestion-MercadoNova/
+│
+├── 📂 Mongo/
+│   ├── 📂 DataSet Sintetico/
+│   │   ├── analisis_ventas_tiempo_real.json
+│   │   ├── historial_comportamiento_clientes.json
+│   │   └── logs_comportamiento_inventario.json
+│   │
+│   ├── MercaNova - Colecciones.js          # Creación de colecciones y relaciones
+│   ├── MercaNova - DataSet.json            # Datos iniciales de prueba para MongoDB
+│   ├── MercaNova - Indices.js              # Índices y consultas optimizadas
+│   └── MercaNova - Usuarios.js             # Gestión de roles y usuarios en Mongo
+│
+├── 📂 SQL Server/
+│   ├── 📂 DataSet Sintetico/
+│   │   ├── AuditoriaInventario.csv
+│   │   ├── Categoria.csv
+│   │   ├── Cliente.csv
+│   │   ├── Compra.csv
+│   │   ├── DetalleCompra.csv
+│   │   ├── DetalleVenta.csv
+│   │   ├── Empleado.csv
+│   │   ├── Inventario.csv
+│   │   ├── Producto.csv
+│   │   ├── Proveedor.csv
+│   │   └── Sucursal.csv
+│   │
+│   ├── MercaNova - Base de datos.sql        # Creación de BD y tablas principales
+│   ├── MercaNova - DataSet SQL.sql          # Inserción de datos iniciales
+│   ├── MercaNova - Indices y Consultas.sql  # Índices y consultas analíticas
+│   ├── MercaNova - Procesos Almacenados.sql # Procedimientos principales
+│   ├── MercaNova - Triggers.sql             # Automatización con triggers
+│   └── MercaNova - Usuarios y Logings.sql   # Gestión de usuarios y roles
+│
+└── 📝 README.md                                # Documentación del proyecto
+
+```
 
 ---
 
-## 🗂️ ANÁLISIS DETALLADO DE CADA ARCHIVO
+### 🧠 Descripción general
+
+- **📂 Mongo/** → Contiene la parte **NoSQL** del sistema: análisis, movimientos de inventario y comportamiento de clientes, con datos en formato JSON y scripts en JavaScript para crear colecciones, índices y usuarios.
+- **📂 SQL Server/** → Implementa la parte **relacional** del sistema con toda la estructura principal (tablas, procedimientos, triggers, etc.) y un conjunto de datos sintéticos en formato CSV para pruebas.
+
+---
+
+## 🗂️ ANÁLISIS DETALLADO DE CADA ARCHIVO (SQL Server)
 
 ### **📄 ARCHIVO 1: `MercaNova - Base de datos.sql`**
 
@@ -31,11 +83,6 @@ Es el **cimientos** de todo el sistema. Crea la base de datos completa con todas
 4. **Ejecuta COMPLETO** (presiona F5 o haz clic en "Ejecutar")
 5. **Verifica** que no hay errores en la pestaña "Mensajes"
 
-#### ✅ **Resultado esperado:**
-- Base de datos `MercaNovaDB` creada
-- 12 tablas creadas sin errores
-- Mensaje: "Comando(s) completado(s) correctamente."
-
 ---
 
 ### **📄 ARCHIVO 2: `MercaNova - DataSet.sql`**
@@ -53,28 +100,12 @@ Es el **cimientos** de todo el sistema. Crea la base de datos completa con todas
 - **50 registros de inventario** (stock en cada sucursal)
 - **Ventas y compras de ejemplo** para probar el sistema
 
-#### 🔍 **Ejemplo de datos insertados:**
-```sql
--- Productos reales con precios
-('Leche Entera 1L', 'Leche pasteurizada entera 1 litro', 1.1, 1, 1, 1)
-('Pollo Entero', 'Pollo fresco entero', 5, 1, 5, 5)
-
--- Sucursales en diferentes departamentos
-('Sucursal Centro', 'Colonia San Benito...', 'San Salvador')
-('Sucursal Occidente', 'Colonia Santa Lucia...', 'Santa Ana')
-```
-
 #### 📝 **Cómo ejecutar:**
 1. **Asegúrate** de que el Paso 1 se ejecutó sin errores
 2. Abre el archivo en SSMS
 3. **Cambia a la base de datos correcta** (debe decir "MercaNovaDB" en la barra de herramientas)
 4. **Ejecuta COMPLETO** (F5)
 5. **Espera** unos segundos mientras inserta 100+ registros
-
-#### ✅ **Resultado esperado:**
-- Mensajes de "(1 fila afectada)" múltiples veces
-- Al final: "Comando(s) completado(s) correctamente."
-- **NO** deben aparecer errores de claves foráneas
 
 ---
 
@@ -107,11 +138,6 @@ Empleado: usuario='empleado_ventas', contraseña='Ventas@123'
 3. **Ejecuta COMPLETO** (F5)
 4. **Ignora** mensajes como "El usuario ya existe" (es normal)
 
-#### ✅ **Resultado esperado:**
-- Mensajes de creación de roles y usuarios
-- Al final: permisos asignados correctamente
-- Pueden aparecer advertencias (son normales)
-
 ---
 
 ### **📄 ARCHIVO 4: `MercaNova - Indices y Consultas.sql`**
@@ -134,11 +160,6 @@ Empleado: usuario='empleado_ventas', contraseña='Ventas@123'
 1. Abre el archivo en SSMS
 2. **Ejecuta COMPLETO** (F5)
 3. **Observa** los resultados en la pestaña "Resultados"
-
-#### ✅ **Resultado esperado:**
-- Mensajes: "Indice 1 creado", "Indice 2 creado", etc.
-- Consultas que muestran datos reales
-- Resultados en formato de tabla
 
 ---
 
@@ -164,11 +185,6 @@ Empleado: usuario='empleado_ventas', contraseña='Ventas@123'
 - **Qué hace**: Genera alertas cuando el stock está bajo
 - **Ejemplo práctico**: Si el stock de leche baja a 8 unidades (mínimo es 10), genera una alerta
 
-#### 🧪 **Incluye demostraciones completas** que muestran:
-- Cómo funcionan los triggers en escenarios reales
-- Cómo manejan errores (transacciones con ROLLBACK)
-- Cómo generan alertas automáticas
-
 #### 📝 **CÓMO EJECUTAR (POR PARTES):**
 
 **PARTE 5.1 - Crear los Triggers:**
@@ -187,11 +203,7 @@ Empleado: usuario='empleado_ventas', contraseña='Ventas@123'
 -- Bloque DEMOSTRACIÓN 1: Líneas 149-248
 -- Bloque DEMOSTRACIÓN 2: Líneas 250-320
 -- Bloque DEMOSTRACIÓN 3: Líneas 322-460
-
-#### ✅ **Resultado esperado:**
-- Mensajes: "Trigger creado"
-- Demostraciones que muestran productos insertados
-- Alertas de stock bajo generadas automáticamente
+```
 
 ---
 
@@ -202,67 +214,193 @@ Empleado: usuario='empleado_ventas', contraseña='Ventas@123'
 
 #### 🛠️ **Procedimientos implementados:**
 
-**1. `sp_RealizarVenta`** - **El corazón del sistema**
-```sql
--- Ejemplo de uso:
-EXEC sp_RealizarVenta 
-    @id_empleado = 10,
-    @id_cliente = 1, 
-    @metodo_pago = 'EFECTIVO',
-    @productos_json = '[{"id":1, "cantidad":2}, {"id":2, "cantidad":1}]';
-```
-**Qué hace internamente**:
-- Valida que el empleado existe
-- Verifica stock disponible
-- Calcula totales automáticamente
-- Registra en auditoría
-- Maneja errores con transacciones
-
+**1. `sp_RealizarVenta`** - Permite a los empleados realizar ventas más facilmente
 **2. `sp_InsertarCliente`** - Registro seguro de clientes
 **3. `sp_BuscarProductos`** - Búsqueda flexible con múltiples filtros  
 **4. `sp_RealizarCompraStock`** - Gestión de compras a proveedores (solo gerentes)
 
 #### 📝 **CÓMO EJECUTAR:**
-1. **Ejecuta por partes** Cada proceso desde el princio hasta GO
+1. **Ejecuta por partes** Cada proceso desde el principio hasta GO
 2. **Luego** ejecuta también por partes los ejemplos al final del archivo (desde EXEC hasta GO)
 
-#### ✅ **Resultado esperado:**
-- Mensajes de creación de procedimientos
-- Ejemplos que muestran ventas realizadas correctamente
-- Resultados de búsquedas de productos
+---
+
+## 🗂️ ANÁLISIS DETALLADO DE CADA ARCHIVO (Mongo DB)
+
+### **📄 ARCHIVO 1: `MercaNova - Colecciones.js`**
+
+#### 🎯 **¿Qué hace este archivo?**
+Crea la **estructura analítica** del sistema. En MongoDB, no tenemos tablas rígidas como en SQL, sino **colecciones flexibles** con documentos JSON.
+
+#### 🔧 **Las 3 colecciones de análisis:**
+
+**1. `analisis_ventas_tiempo`** - El "termómetro" del negocio
+**¿Qué analiza?**: Patrones horarios, productos estrella, métodos de pago
+
+**2. `historial_comportamiento_clientes`** - El "perfilador" de clientes
+**¿Qué analiza?**: Segmentación, preferencias, valor de vida del cliente
+
+**3. `logs_comportamiento_inventario`** - El "médico" del stock
+**¿Qué analiza?**: Rotación, días de stock, alertas automáticas
 
 ---
 
-## 🚀 **RESUMEN EJECUTIVO DEL FLUJO**
+### **📄 ARCHIVO 2: `MercaNova - DataSet.json`**
 
-### **Fase 1: Construcción** 🏗️
-1. **Base de datos** - Crear el "terreno"
-2. **Tablas** - Construir las "habitaciones"
+#### 🎯 **¿Qué hace este archivo?**
+**Pobla el sistema con datos de análisis realistas**. Estos son datos importantes para el negocio.
 
-### **Fase 2: Población** 🎨  
-3. **Datos** - Rellenar con información real
+#### 📊 **Datos de análisis incluidos:**
 
-### **Fase 3: Seguridad** 🔒
-4. **Usuarios y roles** - Definir quién puede hacer qué
+**1. Ventas por hora** - 17 documentos de análisis horario
+```javascript
+// Patrón de ventas en Sucursal Centro
+8:00 AM → 28 transacciones → $850.25 → Hora normal
+9:00 AM → 45 transacciones → $1500.75 → HORA PICO ✅
+12:00 PM → 52 transacciones → $1800.90 → HORA PICO ✅
+```
+**Insight**: Identifica claramente las horas pico para optimizar personal
 
-### **Fase 4: Optimización** ⚡
-5. **Índices** - Hacer búsquedas rápidas
+**2. Comportamiento de 16 clientes** - Historial completo
+```javascript
+// Segmentación automática:
+"Carlos Lemus" → "frecuente" → Visita semanal → $25.5 promedio
+"Ana Guzman" → "valor_alto" → Visita quincenal → $42.3 promedio  
+"Jorge Morales" → "frecuente" → Visita DIARIA → $8.5 promedio
+```
+**Insight**: Permite campañas de marketing segmentadas
 
-### **Fase 5: Automatización** 🤖
-6. **Triggers** - Asistentes automáticos
-
-### **Fase 6: Operaciones** 🛒
-7. **Procedimientos** - Funcionalidades listas para usar
+**3. 18 análisis de inventario** - Alertas inteligentes
+```javascript
+// Ejemplos de criticidad:
+"Leche Entera 1L" → Stock: 8 → "CRÍTICA" → "reabastecimiento_emergencia"
+"Detergente 1kg" → Stock: 75 → "BAJA" → "reducir_pedido"
+"Manzanas 1kg" → Stock: 7 → "CRÍTICA" → "reabastecimiento_urgente"
+```
+**Insight**: Sistema de alertas proactivo para inventario
 
 ---
 
-## ✅ **AL FINALIZAR TENDREMOS:**
+### **📄 ARCHIVO 3: `MercaNova - Indices.js`**
 
-Un sistema de supermercado **completamente funcional** que puede:
-- ✅ Registrar ventas con validaciones automáticas
-- ✅ Gestionar inventario con alertas de stock bajo  
-- ✅ Realizar compras a proveedores con control de permisos
-- ✅ Consultar reportes de ventas y rendimiento
-- ✅ Mantener auditoría completa de todos los movimientos
-- ✅ Operar con diferentes niveles de seguridad
+#### 🎯 **¿Qué hace este archivo?**
+**Optimiza las consultas analíticas** para que los reportes sean ultra-rápidos.
 
+#### ⚡ **Índices creados:**
+
+**1. `idx_analytics_sucursal_timestamp`**
+```javascript
+{
+  "sucursal_id": 1,      // Primero por sucursal
+  "timestamp": -1        // Luego por fecha (más reciente primero)
+}
+```
+**Para consultas como**: "¿Cuáles fueron las ventas de la sucursal 1 en la última semana?"
+
+**2. `idx_inventario_producto_sucursal`** 
+```javascript
+{
+  "producto_id": 1,      // Por producto
+  "sucursal_id": 1,      // Por sucursal  
+  "criticidad": 1,       // Por nivel de alerta
+  "timestamp": -1        // Más reciente primero
+}
+```
+**Para consultas como**: "¿Qué productos están en estado crítico en la sucursal 2?"
+
+#### 💡 **Parámetro `background: true`**
+```javascript
+{ background: true }  // Se crea en segundo plano sin bloquear la base de datos
+```
+**Ventaja**: Puedes seguir usando la base de datos mientras se crean los índices.
+
+---
+
+### **📄 ARCHIVO 4: `MercaNova - Usuarios.js`**
+
+#### 🎯 **¿Qué hace este archivo?**
+**Configura la seguridad y acceso** con roles específicos para diferentes tipos de usuarios.
+
+#### 👥 **Usuarios creados:**
+
+**1. `reportes_user` - Solo Lectura**
+**Para**: Equipos de analytics, gerentes, dashboards
+**Puede**: Consultar todos los datos, generar reportes
+**No puede**: Modificar, insertar o eliminar datos
+
+**2. `app_merchanova` - Lectura/Escritura**  
+**Para**: La aplicación principal que alimenta los datos
+**Puede**: Insertar nuevos análisis, actualizar datos
+**No puede**: Administrar la base de datos
+
+---
+
+## 🚀 **GUÍA DE EJECUCIÓN PASO A PASO**
+
+### **PRERREQUISITOS**
+- ✅ MongoDB instalado (versión 4.2+)
+- ✅ MongoDB Compass o línea de comandos
+- ✅ Acceso de administrador a la instancia
+
+---
+
+### **PASO 1: Ejecutar Colecciones** 🏗️
+**Archivo**: `MercaNova - Colecciones.js`
+```bash
+# En MongoDB Shell:
+mongo "MercaNova - Colecciones.js"
+```
+**Verificación**:
+```javascript
+use MercaNova
+show collections
+// Debe mostrar: analisis_ventas_tiempo, historial_comportamiento_clientes, logs_comportamiento_inventario
+```
+
+### **PASO 2: Insertar Datos de Análisis** 📊
+**Archivo**: `MercaNova - DataSet.json`
+```bash
+# En MongoDB Shell, ejecutar por partes:
+// Copiar y pegar cada insertMany por separado
+```
+**Verificación**:
+```javascript
+db.analisis_ventas_tiempo.countDocuments() // Debe ser 17
+db.historial_comportamiento_clientes.countDocuments() // Debe ser 16  
+db.logs_comportamiento_inventario.countDocuments() // Debe ser 18
+```
+
+### **PASO 3: Crear Índices** ⚡
+**Archivo**: `MercaNova - Indices.js`
+```bash
+mongo "MercaNova - Indices.js"
+```
+**Verificación**:
+```javascript
+db.analisis_ventas_tiempo.getIndexes() // Debe mostrar 2 índices
+db.logs_comportamiento_inventario.getIndexes() // Debe mostrar 2 índices
+```
+
+### **PASO 4: Configurar Usuarios** 🔐
+**Archivo**: `MercaNova - Usuarios.js`
+```bash
+# Conectarse como admin primero:
+mongo admin "MercaNova - Usuarios.js"
+```
+**Verificación**:
+```javascript
+use admin
+db.getUsers() // Debe mostrar los 2 usuarios creados
+```
+
+---
+
+## 🎉 **RESULTADO FINAL**
+
+Al completar ambos sistemas tendrás:
+
+### **🚀 SISTEMA HÍBRIDO COMPLETO**
+- ✅ **Operaciones en tiempo real** + **Análisis predictivo**
+- ✅ **Gestión transaccional** + **Business intelligence**
+- ✅ **Base relacional** + **Base NoSQL optimizada**
+- ✅ **Sistema listo para producción** y **escalable**

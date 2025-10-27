@@ -1,0 +1,11 @@
+nombre,apellido,cargo,fecha_contratacion,salario,id_sucursal
+Jose,Hernandez,Cajero,2021-05-12,450.0,1
+Luisa,Morales,Vendedora,2022-01-20,400.0,1
+Mario,Garcia,Supervisor,2020-03-11,600.0,2
+Sofia,Campos,Cajera,2023-02-18,420.0,2
+Rafael,Torres,Gerente,2019-11-10,900.0,3
+Patricia,Navarro,Bodeguera,2022-08-25,380.0,3
+Juan,Lopez,Vendedor,2020-12-03,410.0,4
+Carmen,Flores,Cajera,2021-09-15,430.0,4
+Andres,Molina,Gerente,2018-04-01,950.0,5
+Laura,Perez,Vendedora,2022-07-09,400.0,5

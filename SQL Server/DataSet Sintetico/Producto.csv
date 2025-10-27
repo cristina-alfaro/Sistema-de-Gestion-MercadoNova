@@ -1,0 +1,12 @@
+nombre,descripcion,precio_unitario,estado,id_categoria,id_proveedor
+Leche Entera 1L,Leche pasteurizada entera 1 litro,1.1,1,1,1
+Jugo de Naranja 1L,Jugo natural de naranja sin azucar,1.5,1,2,2
+Papas Fritas 100g,Bolsa de papas fritas clasicas,0.9,1,3,3
+Detergente 1kg,Detergente en polvo multiusos,2.5,1,4,4
+Pollo Entero,Pollo fresco entero,5.0,1,5,5
+Tomates 1kg,Tomates frescos rojos,1.2,1,6,7
+Manzanas 1kg,Manzanas importadas rojas,2.3,1,7,6
+Frijoles Negros 1kg,Frijoles negros de alta calidad,1.1,1,8,8
+Agua Pura 600ml,Botella de agua purificada,0.5,1,2,9
+Mango 1kg,Mango fresco de temporada,1.8,1,7,10
+Queso Fresco 1lb,Queso fresco delicioso,1.5,1,1,1;
