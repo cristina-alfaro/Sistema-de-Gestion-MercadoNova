@@ -44,6 +44,13 @@ GRANT SELECT ON Empleado TO rol_gerente_sucursal;
 GRANT SELECT ON Sucursal TO rol_gerente_sucursal;
 GO
 
+-- Permisos para GERENTE (acceso completo)
+GRANT EXECUTE ON sp_RealizarCompraStock TO Gerente;
+GRANT EXECUTE ON sp_RealizarVenta TO Gerente;
+GRANT EXECUTE ON sp_BuscarProducto TO Gerente;
+GRANT EXECUTE ON sp_InsertarCliente TO Gerente;
+
+
 -- EMPLEADO VENTAS
 CREATE LOGIN empleado_ventas WITH PASSWORD = 'Ventas@123';
 CREATE USER empleado_ventas FOR LOGIN empleado_ventas;
@@ -68,6 +75,14 @@ GRANT SELECT ON Categoria TO rol_empleado_ventas;
 GRANT SELECT ON Sucursal TO rol_empleado_ventas;
 GRANT SELECT ON Empleado TO rol_empleado_ventas;
 GO
+
+-- Permisos para EMPLEADO (acceso limitado)
+GRANT EXECUTE ON sp_RealizarVenta TO Empleado;
+GRANT EXECUTE ON sp_BuscarProducto TO Empleado;
+GRANT EXECUTE ON sp_InsertarCliente TO Empleado;
+
+-- DENY explícito para el stored procedure de compra al empleado
+DENY EXECUTE ON sp_RealizarCompraStock TO Empleado;
 
 -- VERIFICAR PERMISOS
 -- Conectarte como gerente
