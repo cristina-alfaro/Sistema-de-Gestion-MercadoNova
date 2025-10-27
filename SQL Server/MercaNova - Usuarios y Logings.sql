@@ -45,10 +45,10 @@ GRANT SELECT ON Sucursal TO rol_gerente_sucursal;
 GO
 
 -- Permisos para GERENTE (acceso completo)
-GRANT EXECUTE ON sp_RealizarCompraStock TO Gerente;
-GRANT EXECUTE ON sp_RealizarVenta TO Gerente;
-GRANT EXECUTE ON sp_BuscarProducto TO Gerente;
-GRANT EXECUTE ON sp_InsertarCliente TO Gerente;
+GRANT EXECUTE ON sp_RealizarCompraStock TO gerente_sucursal;
+GRANT EXECUTE ON sp_RealizarVenta TO gerente_sucursal;
+GRANT EXECUTE ON sp_BuscarProducto TO gerente_sucursal;
+GRANT EXECUTE ON sp_InsertarCliente TO gerente_sucursal;
 
 
 -- EMPLEADO VENTAS
@@ -77,9 +77,9 @@ GRANT SELECT ON Empleado TO rol_empleado_ventas;
 GO
 
 -- Permisos para EMPLEADO (acceso limitado)
-GRANT EXECUTE ON sp_RealizarVenta TO Empleado;
-GRANT EXECUTE ON sp_BuscarProducto TO Empleado;
-GRANT EXECUTE ON sp_InsertarCliente TO Empleado;
+GRANT EXECUTE ON sp_RealizarVenta TO empleado_ventas;
+GRANT EXECUTE ON sp_BuscarProducto TO empleado_ventas;
+GRANT EXECUTE ON sp_InsertarCliente TO empleado_ventas;
 
 -- DENY explícito para el stored procedure de compra al empleado
 DENY EXECUTE ON sp_RealizarCompraStock TO Empleado;
