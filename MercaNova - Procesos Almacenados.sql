@@ -4,7 +4,7 @@ GO
 -- PROCESOS ALMACENADOS
 
 --- 1. SP - RealizarVenta
-CREATE sp_RealizarVenta
+CREATE PROCEDURE sp_RealizarVenta
     @id_empleado INT,
     @id_cliente INT = NULL,
     @metodo_pago NVARCHAR(50),
@@ -226,7 +226,7 @@ END;
 GO
 
 --- 3. SP - BuscarProducto
-CREATE OR ALTER PROCEDURE sp_BuscarProductos
+CREATE PROCEDURE sp_BuscarProductos
     @nombre NVARCHAR(100) = NULL,
     @id_categoria INT = NULL,
     @id_proveedor INT = NULL,
@@ -265,8 +265,8 @@ BEGIN
 END;
 GO
 
--- 4. SP - RealizarCompraStock
-CREATE OR ALTER PROCEDURE sp_RealizarCompraStock
+--- 4. SP - RealizarCompraStock
+CREATE PROCEDURE sp_RealizarCompraStock
     @id_empleado_gerente INT,
     @productos_json NVARCHAR(MAX)
 AS

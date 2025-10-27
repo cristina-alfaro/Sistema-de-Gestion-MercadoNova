@@ -1,6 +1,7 @@
 /*Base de datos: MercadoNovaDBprueba16, Version: 16.0*/
 /*Autor: Luis Alonso Hernandez Mundo, Fecha de creacion: 24/10/25*/
 /*Proposito: Index*/
+
 USE MercaNovaDB;
 GO
 
