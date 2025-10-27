@@ -271,9 +271,9 @@ BEGIN TRY
     VALUES 
         ('Cereal Integral 500g', 'Cereal de trigo integral', 3.75, 1, 3, 3),
         ('Shampoo Anticaspa 400ml', 'Shampoo para cuidado capilar', 5.25, 1, 4, 4),
-        ('Salm�n Fresco 500g', 'Filete de salm�n fresco', 12.50, 1, 5, 5);
+        ('Salmón Fresco 500g', 'Filete de salmón fresco', 12.50, 1, 5, 5);
     
-    PRINT 'M�ltiples productos insertados exitosamente.';
+    PRINT 'Múltiples productos insertados exitosamente.';
     
     -- Verificamos que todos tienen registro en auditoria
     SELECT 
@@ -283,7 +283,7 @@ BEGIN TRY
         ai.fecha
     FROM Producto p
     INNER JOIN AuditoriaInventario ai ON p.id_producto = ai.id_producto
-    WHERE p.nombre IN ('Cereal Integral 500g', 'Shampoo Anticaspa 400ml', 'Salm�n Fresco 500g')
+    WHERE p.nombre IN ('Cereal Integral 500g', 'Shampoo Anticaspa 400ml', 'Salmón Fresco 500g')
     ORDER BY ai.fecha DESC;
     
 END TRY
@@ -356,9 +356,8 @@ ORDER BY ai.fecha DESC;
 -- ==========
 -- Hasta aqui
 -- ==========
-
 -- =====================================
--- DEMOSTRACI�N 2: TR_CalcularTotalVenta
+-- DEMOSTRACIÓN 2: TR_CalcularTotalVenta
 -- =====================================
 -- ===================
 -- Ejecutar desde aqui
@@ -430,7 +429,7 @@ GO
 -- Hasta aqui
 -- ========== 
 -- =====================================
--- DEMOSTRACI�N 3: TR_ControlStockMinimo
+-- DEMOSTRACIÓN 3: TR_ControlStockMinimo
 -- =====================================
 -- ===================
 -- Ejecutar desde aqui
@@ -466,7 +465,7 @@ BEGIN TRY
     BEGIN TRANSACTION;
     
     -- Producto 7 en sucursal 1 (Manzanas) - Stock actual: 26, Minimo: 10
-    -- Reducir a 8 (por debajo del m�nimo)
+    -- Reducir a 8 (por debajo del mínimo)
     UPDATE Inventario 
     SET stock_actual = 8,
         ultima_actualizacion = GETDATE()
@@ -484,7 +483,7 @@ BEGIN TRY
     PRINT '    Producto 2 actualizado a stock bajo';
     
     -- Producto 5 en sucursal 3 (Pollo) - Stock actual: 90, Minimo: 10
-    -- Reducir a 5 (muy por debajo del m�nimo)
+    -- Reducir a 5 (muy por debajo del mínimo)
     UPDATE Inventario 
     SET stock_actual = 5,
         ultima_actualizacion = GETDATE()
@@ -511,7 +510,7 @@ SELECT
     p.nombre as Producto,
     s.nombre as Sucursal,
     ai.accion,
-    ai.stock_anterior as Stock_M�nimo,
+    ai.stock_anterior as Stock_Mínimo,
     ai.stock_nuevo as Stock_Actual,
     ai.cantidad as Diferencia,
     ai.fecha,

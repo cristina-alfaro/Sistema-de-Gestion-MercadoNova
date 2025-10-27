@@ -4,11 +4,11 @@ GO
 --INSERCIONES
 
 INSERT INTO Sucursal (nombre, direccion, ciudad, departamento, telefono, gerente) VALUES
-('Sucursal Centro', 'Colonia San Benito, Avenida España #123', 'San Salvador', 'San Salvador', '2222-1111', 'Maria Lopez'),
+('Sucursal Centro', 'Colonia San Benito, Avenida Espaï¿½a #123', 'San Salvador', 'San Salvador', '2222-1111', 'Maria Lopez'),
 ('Sucursal Occidente', 'Colonia Santa Lucia, Calle Libertad #45', 'Santa Ana', 'Santa Ana', '2444-2233', 'Carlos Gomez'),
 ('Sucursal Oriente', 'Colonia Ciudad Pacifica, Avenida Roosevelt #89', 'San Miguel', 'San Miguel', '2666-3344', 'Julia Martinez'),
 ('Sucursal Costera', 'Colonia El Carmen, 4a Calle Poniente #56', 'Santa Tecla', 'La Libertad', '2456-7788', 'Oscar Ramirez'),
-('Sucursal Norteña', 'Colonia El angel, Calle Central #32', 'La Palma', 'Chalatenango', '2300-9911', 'Ana Torres');
+('Sucursal Norteï¿½a', 'Colonia El angel, Calle Central #32', 'La Palma', 'Chalatenango', '2300-9911', 'Ana Torres');
 
 INSERT INTO Categoria (nombre, descripcion) VALUES
 ('Lacteos', 'Productos derivados de la leche'),
@@ -42,7 +42,7 @@ INSERT INTO Producto (nombre, descripcion, precio_unitario, estado, id_categoria
 ('Manzanas 1kg', 'Manzanas importadas rojas', 2.3, 1, 7, 6),
 ('Frijoles Negros 1kg', 'Frijoles negros de alta calidad', 1.1, 1, 8, 8),
 ('Agua Pura 600ml', 'Botella de agua purificada', 0.5, 1, 2, 9),
-('Mango 1kg', 'Mango fresco de temporada', 1.8, 1, 7, 10);
+('Mango 1kg', 'Mango fresco de temporada', 1.8, 1, 7, 10),
 ('Queso Fresco 1lb', 'Queso fresco delicioso', 1.5, 1, 1, 1);
 
 INSERT INTO Empleado (nombre, apellido, cargo, fecha_contratacion, salario, id_sucursal) VALUES
@@ -58,7 +58,7 @@ INSERT INTO Empleado (nombre, apellido, cargo, fecha_contratacion, salario, id_s
 ('Laura', 'Perez', 'Vendedora', '2022-07-09', 400, 5);
 
 INSERT INTO Cliente (nombre, apellido, dui, telefono, correo, direccion) VALUES
-('Carlos', 'Lemus', '01234567-8', '7012-1111', 'carlos.lemus@gmail.com', 'Colonia San Benito, Avenida España #25, Distrito San Salvador Centro, San Salvador'),
+('Carlos', 'Lemus', '01234567-8', '7012-1111', 'carlos.lemus@gmail.com', 'Colonia San Benito, Avenida Espaï¿½a #25, Distrito San Salvador Centro, San Salvador'),
 ('Ana', 'Guzman', '02345678-9', '7013-2222', 'ana.guzman@outlook.com', 'Colonia San Benito, Calle La Mascota #12, Distrito San Salvador Centro, San Salvador'),
 ('Ricardo', 'Flores', '03456789-0', '7014-3333', 'ricardo.flores@yahoo.com', 'Colonia Centro, Avenida Independencia #34, Distrito Santa Ana Centro, Santa Ana'),
 ('Sonia', 'Mendoza', '04567890-1', '7015-4444', 'sonia.mendoza@gmail.com', 'Colonia Ciudad Jardin, Calle Los Laureles #8, Distrito San Miguel Centro, San Miguel'),

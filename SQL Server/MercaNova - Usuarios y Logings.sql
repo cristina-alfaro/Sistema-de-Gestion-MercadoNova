@@ -5,6 +5,7 @@ GO
 
 -- Encargado de la sucursal: Puede gestionar ventas, compras, inventario, proveedores, y auditar cambios
 CREATE ROLE rol_gerente_sucursal;
+GO
 
 -- Cajero o vendedor: Solo puede registrar ventas y consultar inventario, sin modificar nada m�s
 CREATE ROLE rol_empleado_ventas;
@@ -42,12 +43,11 @@ GRANT SELECT ON Empleado TO rol_gerente_sucursal;
 
 -- Sucursal (solo lectura, no puede modificar datos institucionales)
 GRANT SELECT ON Sucursal TO rol_gerente_sucursal;
-GO
 
 -- Permisos para GERENTE (acceso completo)
 GRANT EXECUTE ON sp_RealizarCompraStock TO gerente_sucursal;
 GRANT EXECUTE ON sp_RealizarVenta TO gerente_sucursal;
-GRANT EXECUTE ON sp_BuscarProducto TO gerente_sucursal;
+GRANT EXECUTE ON sp_BuscarProductos TO gerente_sucursal;
 GRANT EXECUTE ON sp_InsertarCliente TO gerente_sucursal;
 
 
@@ -78,11 +78,11 @@ GO
 
 -- Permisos para EMPLEADO (acceso limitado)
 GRANT EXECUTE ON sp_RealizarVenta TO empleado_ventas;
-GRANT EXECUTE ON sp_BuscarProducto TO empleado_ventas;
+GRANT EXECUTE ON sp_BuscarProductos TO empleado_ventas;
 GRANT EXECUTE ON sp_InsertarCliente TO empleado_ventas;
 
 -- DENY explícito para el stored procedure de compra al empleado
-DENY EXECUTE ON sp_RealizarCompraStock TO Empleado;
+DENY EXECUTE ON sp_RealizarCompraStock TO empleado_ventas;
 
 -- VERIFICAR PERMISOS
 -- Conectarte como gerente
