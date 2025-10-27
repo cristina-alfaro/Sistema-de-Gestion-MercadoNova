@@ -1,8 +1,12 @@
+ -- CREACION DE LA BASE DE DATOS MERCANOVA
+
 CREATE DATABASE MercaNovaDB;
 GO
 
 USE MercaNovaDB;
 GO
+
+-- CREACION DE TABLAS   
 
 -- 1. Sucursales
 CREATE TABLE Sucursal (
@@ -39,7 +43,7 @@ CREATE TABLE Cliente (
 	fecha_registro DATE DEFAULT GETDATE()
 );
 
--- 4. Categorías
+-- 4. Categorï¿½as
 CREATE TABLE Categoria (
     id_categoria INT IDENTITY(1,1) PRIMARY KEY,
     nombre NVARCHAR(100) NOT NULL,
@@ -135,7 +139,7 @@ CREATE TABLE DetalleCompra (
     FOREIGN KEY (id_producto) REFERENCES Producto(id_producto)
 );
 
--- 12. Auditoría de Inventario
+-- 12. Auditorï¿½a de Inventario
 CREATE TABLE AuditoriaInventario (
     id_auditoria INT IDENTITY(1,1) PRIMARY KEY,
     id_producto INT NOT NULL,

@@ -1,6 +1,11 @@
--- =================
--- BLOQUE DE INDICES
--- =================
+/*Base de datos: MercadoNovaDBprueba16, Version: 16.0*/
+/*Autor: Luis Alonso Hernandez Mundo, Fecha de creacion: 24/10/25*/
+/*Proposito: Index*/
+USE MercaNovaDB;
+GO
+
+-- INDICES
+
 -- INDICE 1: Para busqueda rapida de productos por nombre
 CREATE INDEX IX_Producto_Nombre ON Producto(nombre);
 PRINT 'Indice 1 creado: IX_Producto_Nombre (Busqueda por nombre de producto)';
@@ -21,9 +26,8 @@ CREATE INDEX IX_Cliente_Apellido ON Cliente(apellido);
 PRINT 'Indice 4 creado: IX_Cliente_Apellido (Busqueda de clientes por apellido)';
 GO
 
--- =========================================
 -- DEMOSTRACION DE USO CON CONSULTAS SIMPLES
--- =========================================
+
 -- CONSULTA 1: Busqueda de productos por nombre (uso de IX_Producto_Nombre)
 PRINT '1. Buscando productos que contengan "Leche":';
 SELECT nombre, precio_unitario, descripcion 
@@ -61,9 +65,8 @@ GO
 USE MercaNovaDBprueba16;
 GO
 
--- ===============================================
 -- CONSULTAS CON JOIN Y FUNCIONES DE AGREGACION
--- ===============================================
+
 -- CONSULTA 5: Total de ventas por sucursal
 SELECT 
     s.nombre AS Sucursal,
@@ -75,7 +78,7 @@ GROUP BY s.nombre
 ORDER BY Total_Vendido DESC;
 GO
 
- -- CONSULTA 6: Stock total y promedio por categoría de producto
+ -- CONSULTA 6: Stock total y promedio por categorï¿½a de producto
 SELECT 
     c.nombre AS Categoria,
     SUM(i.stock_actual) AS Stock_Total,

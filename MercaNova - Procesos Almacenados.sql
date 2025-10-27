@@ -2,6 +2,7 @@ USE MercaNovaDB;
 GO
 
 -- PROCESOS ALMACENADOS
+
 --- 1. SP - RealizarVenta
 CREATE sp_RealizarVenta
     @id_empleado INT,
@@ -77,15 +78,15 @@ BEGIN
         -- Validar productos
         IF NOT EXISTS (SELECT 1 FROM #TempVentas)
         BEGIN
-            RAISERROR('Error: Formato de productos inv·lido', 16, 1);
+            RAISERROR('Error: Formato de productos invÔøΩlido', 16, 1);
             ROLLBACK TRANSACTION;
             RETURN;
         END
 
-        -- Validar que productos existen y est·n activos
+        -- Validar que productos existen y estÔøΩn activos
         IF EXISTS (SELECT 1 FROM #TempVentas tv LEFT JOIN Producto p ON tv.id_producto = p.id_producto WHERE p.id_producto IS NULL OR p.estado = 0)
         BEGIN
-            RAISERROR('Error: Uno o m·s productos no existen o est·n inactivos', 16, 1);
+            RAISERROR('Error: Uno o mÔøΩs productos no existen o estÔøΩn inactivos', 16, 1);
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -116,7 +117,7 @@ BEGIN
         FROM Empleado 
         WHERE id_empleado = @id_empleado;
 
-        -- INSERTAR VENTA (el trigger TR_CalcularTotalVenta calcular· el total autom·ticamente)
+        -- INSERTAR VENTA (el trigger TR_CalcularTotalVenta calcularÔøΩ el total automÔøΩticamente)
         INSERT INTO Venta (fecha_venta, total, metodo_pago, id_empleado, id_cliente, id_sucursal)
         VALUES (GETDATE(), 0, @metodo_pago, @id_empleado, @id_cliente, @id_sucursal); -- Total = 0 temporal
 
@@ -127,7 +128,7 @@ BEGIN
         SELECT @id_venta, id_producto, cantidad, precio_unitario
         FROM #TempVentas;
 
-        -- AuditorÌa manual (el trigger de stock negativo har· auditorÌa si es necesario)
+        -- AuditorÔøΩa manual (el trigger de stock negativo harÔøΩ auditorÔøΩa si es necesario)
         INSERT INTO AuditoriaInventario (
             id_producto, id_sucursal, fecha, accion, 
             cantidad, stock_anterior, stock_nuevo, usuario_responsable
@@ -202,7 +203,7 @@ BEGIN
     -- Para que el dui no se repita
     IF EXISTS (SELECT 1 FROM Cliente WHERE dui = @dui)
     BEGIN
-        RAISERROR('Error: Ya existe un cliente registrado con este n˙mero de DUI.', 16, 1);
+        RAISERROR('Error: Ya existe un cliente registrado con este nÔøΩmero de DUI.', 16, 1);
         RETURN;
     END
 
@@ -234,10 +235,10 @@ CREATE OR ALTER PROCEDURE sp_BuscarProductos
     @estado BIT = NULL
 AS
 BEGIN
-    -- Solo validaciÛn crÌtica
+    -- Solo validaciÔøΩn crÔøΩtica
     IF @precio_min IS NOT NULL AND @precio_max IS NOT NULL AND @precio_min > @precio_max
     BEGIN
-        RAISERROR('Error: El precio mÌnimo no puede ser mayor al precio m·ximo', 16, 1);
+        RAISERROR('Error: El precio mÔøΩnimo no puede ser mayor al precio mÔøΩximo', 16, 1);
         RETURN;
     END
 
@@ -320,7 +321,7 @@ BEGIN
         END
 
         -- El resto del procedimiento se mantiene igual, pero usando @id_sucursal_empleado
-        -- Validar que el JSON de productos no estÈ vacÌo
+        -- Validar que el JSON de productos no estÔøΩ vacÔøΩo
         IF @productos_json IS NULL OR LTRIM(RTRIM(@productos_json)) = '' OR @productos_json = '[]'
         BEGIN
             RAISERROR('Error: No hay productos en la compra', 16, 1);
@@ -356,7 +357,7 @@ BEGIN
         -- Validar que se insertaron productos
         IF NOT EXISTS (SELECT 1 FROM #TempCompras)
         BEGIN
-            RAISERROR('Error: Formato de productos inv·lido', 16, 1);
+            RAISERROR('Error: Formato de productos invÔøΩlido', 16, 1);
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -381,7 +382,7 @@ BEGIN
             RETURN;
         END
 
-        -- Validar que todos los productos est·n activos
+        -- Validar que todos los productos estÔøΩn activos
         IF EXISTS (
             SELECT 1 
             FROM #TempCompras tc
@@ -396,7 +397,7 @@ BEGIN
             INNER JOIN Producto p ON tc.id_producto = p.id_producto
             WHERE p.estado = 0;
             
-            RAISERROR('Error: Los siguientes productos est·n inactivos: %s', 16, 1, @productos_inactivos);
+            RAISERROR('Error: Los siguientes productos estÔøΩn inactivos: %s', 16, 1, @productos_inactivos);
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -409,7 +410,7 @@ BEGIN
             WHERE pr.id_proveedor IS NULL
         )
         BEGIN
-            RAISERROR('Error: Uno o m·s proveedores no existen', 16, 1);
+            RAISERROR('Error: Uno o mÔøΩs proveedores no existen', 16, 1);
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -422,7 +423,7 @@ BEGIN
             WHERE p.id_proveedor != tc.id_proveedor
         )
         BEGIN
-            RAISERROR('Error: Uno o m·s productos no pertenecen al proveedor especificado', 16, 1);
+            RAISERROR('Error: Uno o mÔøΩs productos no pertenecen al proveedor especificado', 16, 1);
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -539,7 +540,7 @@ BEGIN
             INSERT (id_sucursal, id_producto, stock_actual, stock_minimo, stock_maximo, ultima_actualizacion)
             VALUES (source.id_sucursal, source.id_producto, source.cantidad, 10, 100, GETDATE());
 
-        -- Registrar en auditorÌa de inventario (usando @id_sucursal_empleado)
+        -- Registrar en auditorÔøΩa de inventario (usando @id_sucursal_empleado)
         INSERT INTO AuditoriaInventario (
             id_producto, 
             id_sucursal, 
@@ -565,11 +566,11 @@ BEGIN
 
         COMMIT TRANSACTION;
 
-        -- Retornar resumen general de la compra (incluyendo la sucursal autom·tica)
+        -- Retornar resumen general de la compra (incluyendo la sucursal automÔøΩtica)
         SELECT 
             @total_compra AS total_compra_general,
             @nombre_gerente AS gerente_responsable,
-            @id_sucursal_empleado AS id_sucursal,  -- Informamos quÈ sucursal se usÛ
+            @id_sucursal_empleado AS id_sucursal,  -- Informamos quÔøΩ sucursal se usÔøΩ
             (SELECT nombre FROM Sucursal WHERE id_sucursal = @id_sucursal_empleado) AS nombre_sucursal,
             (SELECT COUNT(*) FROM #TempCompras) AS cantidad_productos,
             (SELECT SUM(cantidad) FROM #TempCompras) AS total_unidades,
@@ -622,4 +623,96 @@ BEGIN
         RETURN;
     END CATCH;
 END;
+GO
+
+-- EJEMPLOS DE USO DE LOS SP
+
+USE MercaNovaDB;
+GO
+
+-- 1. EJEMPLOS PARA sp_RealizarVenta
+
+-- Ejemplo 1: Venta con 3 productos diferentes
+EXEC sp_RealizarVenta 
+    @id_empleado = 10,
+    @id_cliente = 1,
+    @metodo_pago = 'EFECTIVO',
+    @productos_json = '[
+        {"id":1, "cantidad":2},
+        {"id":2, "cantidad":1},
+        {"id":3, "cantidad":3}
+    ]';
+GO
+
+-- Ejemplo 2: Venta sin cliente, solo un producto
+EXEC sp_RealizarVenta 
+    @id_empleado = 2,
+    @id_cliente = NULL,
+    @metodo_pago = 'TARJETA',
+    @productos_json = '[
+        {"id":4, "cantidad":5}
+    ]';
+GO
+
+-- 2. EJEMPLOS PARA sp_InsertarCliente
+
+-- Ejemplo 1: Cliente con todos los datos
+EXEC sp_InsertarCliente 
+    @nombre = 'Mar√≠a',
+    @apellido = 'Gonzalez',
+    @dui = '12345678-9',
+    @telefono = '2222-3333',
+    @correo = 'maria.gonzalez@email.com',
+    @direccion = 'Calle Principal #123, San Salvador';
+GO
+
+-- Ejemplo 2: Cliente con datos m√≠nimos
+EXEC sp_InsertarCliente 
+    @nombre = 'Carlos',
+    @apellido = 'L√≥pez',
+    @dui = '98765432-1',
+    @telefono = '7777-8888',
+    @correo = NULL,
+    @direccion = NULL;
+GO
+
+-- 3. EJEMPLOS PARA sp_BuscarProductos
+
+-- Ejemplo 1: B√∫squeda por categor√≠a y rango de precios
+EXEC sp_BuscarProductos 
+    @id_categoria = 7,
+    @precio_min = 2.00,
+    @precio_max = 50.00,
+    @estado = 1;
+GO
+
+-- Ejemplo 2: B√∫squeda por nombre y proveedor
+EXEC sp_BuscarProductos 
+    @nombre = 'Pollo entero',
+    @id_proveedor = 5,
+    @estado = 1;
+GO
+
+-- 4. EJEMPLOS PARA sp_RealizarCompraStock
+
+-- Ejemplo 1: Compra de productos de 3 proveedores diferentes
+EXEC sp_RealizarCompraStock 
+    @id_empleado_gerente = 5,
+	-- En el campo ‚Äúcosto‚Äù se debe registrar el costo unitario del producto pagado al proveedor.
+	-- Este valor debe ser menor que el precio registrado en la tabla ‚ÄúProducto‚Äù, ya que dicho precio corresponde al valor de venta al p√∫blico.
+    @productos_json = '[
+        {"id":1, "cantidad":20, "costo":1.00, "id_proveedor":1}, 
+        {"id":2, "cantidad":15, "costo":1.15, "id_proveedor":2},
+        {"id":3, "cantidad":30, "costo":0.75, "id_proveedor":3},
+    ]';
+GO
+
+
+-- Ejemplo 2: Compra de un solo proveedor
+EXEC sp_RealizarCompraStock 
+    @id_empleado_gerente = 5,
+    @productos_json = '[
+        {"id":1, "cantidad":50, "costo":1.00, "id_proveedor":1},
+        {"id":11, "cantidad":30, "costo":1.10, "id_proveedor":1}
+    ]';
 GO

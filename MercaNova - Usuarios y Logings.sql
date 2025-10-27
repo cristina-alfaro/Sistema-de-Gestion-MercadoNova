@@ -1,10 +1,12 @@
 USE MercaNovaDB;
 GO
 
+-- CREACION DE ROLES 
+
 -- Encargado de la sucursal: Puede gestionar ventas, compras, inventario, proveedores, y auditar cambios
 CREATE ROLE rol_gerente_sucursal;
 
--- Cajero o vendedor: Solo puede registrar ventas y consultar inventario, sin modificar nada más
+-- Cajero o vendedor: Solo puede registrar ventas y consultar inventario, sin modificar nada mï¿½s
 CREATE ROLE rol_empleado_ventas;
 GO
 
@@ -21,21 +23,21 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON DetalleVenta TO rol_gerente_sucursal;
 GRANT SELECT, INSERT, UPDATE, DELETE ON Compra TO rol_gerente_sucursal;
 GRANT SELECT, INSERT, UPDATE, DELETE ON DetalleCompra TO rol_gerente_sucursal;
 
--- Inventario y auditoría
+-- Inventario y auditorï¿½a
 GRANT SELECT, INSERT, UPDATE, DELETE ON Inventario TO rol_gerente_sucursal;
 GRANT SELECT, INSERT, UPDATE, DELETE ON AuditoriaInventario TO rol_gerente_sucursal;
 
 -- Proveedores
 GRANT SELECT, INSERT, UPDATE, DELETE ON Proveedor TO rol_gerente_sucursal;
 
--- Productos y Categorías (solo lectura, para control)
+-- Productos y Categorï¿½as (solo lectura, para control)
 GRANT SELECT ON Producto TO rol_gerente_sucursal;
 GRANT SELECT ON Categoria TO rol_gerente_sucursal;
 
 -- Clientes (solo lectura, no puede editar datos de clientes)
 GRANT SELECT ON Cliente TO rol_gerente_sucursal;
 
--- Empleados (solo lectura, para conocer quién vende)
+-- Empleados (solo lectura, para conocer quiï¿½n vende)
 GRANT SELECT ON Empleado TO rol_gerente_sucursal;
 
 -- Sucursal (solo lectura, no puede modificar datos institucionales)
@@ -58,7 +60,7 @@ GRANT SELECT, INSERT ON Cliente TO rol_empleado_ventas;
 -- Inventario: solo lectura (para saber si hay productos)
 GRANT SELECT ON Inventario TO rol_empleado_ventas;
 
--- Productos y categorías: solo lectura (para ver precios y descripciones)
+-- Productos y categorï¿½as: solo lectura (para ver precios y descripciones)
 GRANT SELECT ON Producto TO rol_empleado_ventas;
 GRANT SELECT ON Categoria TO rol_empleado_ventas;
 
