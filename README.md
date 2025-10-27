@@ -3,7 +3,6 @@
 **¿Qué es  el Sistema-de-Gestion-MercadoNova?**  
 Es un sistema de base de datos hibrido diseñado para gestionar todas las operaciones de un supermercado (MercaNova): ventas, inventario, compras, clientes y empleados.
 
-```md
 ## 📁 ESTRUCTURA DEL PROYECTO
 
 La carpeta del proyecto está organizada para separar las implementaciones de **SQL Server** y **MongoDB**, junto con sus datasets y scripts correspondientes.
