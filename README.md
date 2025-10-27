@@ -346,8 +346,10 @@ Crea la **estructura analítica** del sistema. En MongoDB, no tenemos tablas rí
 ### **PASO 1: Ejecutar Colecciones** 🏗️
 **Archivo**: `MercaNova - Colecciones.js`
 ```bash
+# Ejecuta esta parte primero
 # En MongoDB Shell:
-mongo "MercaNova - Colecciones.js"
+use MercaNova
+# Luego ejecuta coleccion por coleccion, una a la vez
 ```
 **Verificación**:
 ```javascript
@@ -372,7 +374,8 @@ db.logs_comportamiento_inventario.countDocuments() // Debe ser 18
 ### **PASO 3: Crear Índices** ⚡
 **Archivo**: `MercaNova - Indices.js`
 ```bash
-mongo "MercaNova - Indices.js"
+# En MongoDB Shell, ejecutar por partes:
+// Copiar y pegar cada indice por separado
 ```
 **Verificación**:
 ```javascript
@@ -383,8 +386,9 @@ db.logs_comportamiento_inventario.getIndexes() // Debe mostrar 2 índices
 ### **PASO 4: Configurar Usuarios** 🔐
 **Archivo**: `MercaNova - Usuarios.js`
 ```bash
-# Conectarse como admin primero:
-mongo admin "MercaNova - Usuarios.js"
+# **Conectarse como admin primero**
+# En MongoDB Shell, ejecutar por partes:
+// Copiar y pegar cada usuario por separado
 ```
 **Verificación**:
 ```javascript
