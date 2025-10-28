@@ -276,7 +276,7 @@ BEGIN
     DECLARE @total_compra DECIMAL(10,2) = 0;
     DECLARE @nombre_gerente NVARCHAR(201);
     DECLARE @cargo_empleado NVARCHAR(100);
-    DECLARE @id_sucursal_empleado INT;  -- Nueva variable para la sucursal del empleado
+    DECLARE @id_sucursal_empleado INT;
 
     BEGIN TRY
         BEGIN TRANSACTION;
@@ -285,7 +285,7 @@ BEGIN
         SELECT 
             @cargo_empleado = e.cargo,
             @nombre_gerente = e.nombre + ' ' + e.apellido,
-            @id_sucursal_empleado = e.id_sucursal  -- Obtenemos la sucursal del empleado
+            @id_sucursal_empleado = e.id_sucursal
         FROM Empleado e
         WHERE e.id_empleado = @id_empleado_gerente;
 
@@ -320,8 +320,7 @@ BEGIN
             RETURN;
         END
 
-        -- El resto del procedimiento se mantiene igual, pero usando @id_sucursal_empleado
-        -- Validar que el JSON de productos no est� vac�o
+        -- Validar que el JSON de productos no está vacío
         IF @productos_json IS NULL OR LTRIM(RTRIM(@productos_json)) = '' OR @productos_json = '[]'
         BEGIN
             RAISERROR('Error: No hay productos en la compra', 16, 1);
@@ -334,30 +333,30 @@ BEGIN
             id_producto INT,
             cantidad INT,
             costo_unitario DECIMAL(10,2),
-            id_proveedor INT,
+            id_proveedor INT,           -- Se obtiene de la tabla Producto
             subtotal DECIMAL(10,2),
             nombre_producto NVARCHAR(100),
             nombre_proveedor NVARCHAR(100)
         );
 
-        -- Insertar productos desde JSON
+        --  Obtener datos del json, Producto y Proveedor para crear tabla temporal
         INSERT INTO #TempCompras (id_producto, cantidad, costo_unitario, id_proveedor, subtotal, nombre_producto, nombre_proveedor)
         SELECT 
             CAST(JSON_VALUE(producto.value, '$.id') AS INT) AS id_producto,
             CAST(JSON_VALUE(producto.value, '$.cantidad') AS INT) AS cantidad,
             CAST(JSON_VALUE(producto.value, '$.costo') AS DECIMAL(10,2)) AS costo_unitario,
-            CAST(JSON_VALUE(producto.value, '$.id_proveedor') AS INT) AS id_proveedor,
+            p.id_proveedor,  -- ✅ Obtener de Producto, NO del JSON
             CAST(JSON_VALUE(producto.value, '$.cantidad') AS INT) * CAST(JSON_VALUE(producto.value, '$.costo') AS DECIMAL(10,2)) AS subtotal,
             p.nombre AS nombre_producto,
             pr.nombre AS nombre_proveedor
         FROM OPENJSON(@productos_json) AS producto
         INNER JOIN Producto p ON CAST(JSON_VALUE(producto.value, '$.id') AS INT) = p.id_producto
-        INNER JOIN Proveedor pr ON CAST(JSON_VALUE(producto.value, '$.id_proveedor') AS INT) = pr.id_proveedor;
+        INNER JOIN Proveedor pr ON p.id_proveedor = pr.id_proveedor;  -- Usar proveedor del producto
 
         -- Validar que se insertaron productos
         IF NOT EXISTS (SELECT 1 FROM #TempCompras)
         BEGIN
-            RAISERROR('Error: Formato de productos inv�lido', 16, 1);
+            RAISERROR('Error: Formato de productos inválido', 16, 1);
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -382,7 +381,7 @@ BEGIN
             RETURN;
         END
 
-        -- Validar que todos los productos est�n activos
+        -- Validar que todos los productos están activos
         IF EXISTS (
             SELECT 1 
             FROM #TempCompras tc
@@ -397,33 +396,7 @@ BEGIN
             INNER JOIN Producto p ON tc.id_producto = p.id_producto
             WHERE p.estado = 0;
             
-            RAISERROR('Error: Los siguientes productos est�n inactivos: %s', 16, 1, @productos_inactivos);
-            ROLLBACK TRANSACTION;
-            RETURN;
-        END
-
-        -- Validar que todos los proveedores existen
-        IF EXISTS (
-            SELECT 1 
-            FROM #TempCompras tc
-            LEFT JOIN Proveedor pr ON tc.id_proveedor = pr.id_proveedor
-            WHERE pr.id_proveedor IS NULL
-        )
-        BEGIN
-            RAISERROR('Error: Uno o m�s proveedores no existen', 16, 1);
-            ROLLBACK TRANSACTION;
-            RETURN;
-        END
-
-        -- Validar que los productos pertenecen a los proveedores especificados
-        IF EXISTS (
-            SELECT 1 
-            FROM #TempCompras tc
-            INNER JOIN Producto p ON tc.id_producto = p.id_producto
-            WHERE p.id_proveedor != tc.id_proveedor
-        )
-        BEGIN
-            RAISERROR('Error: Uno o m�s productos no pertenecen al proveedor especificado', 16, 1);
+            RAISERROR('Error: Los siguientes productos están inactivos: %s', 16, 1, @productos_inactivos);
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -432,6 +405,26 @@ BEGIN
         IF EXISTS (SELECT 1 FROM #TempCompras WHERE cantidad <= 0 OR costo_unitario <= 0)
         BEGIN
             RAISERROR('Error: Las cantidades y costos deben ser mayores a cero', 16, 1);
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- Validar que TODOS los productos YA existen en el inventario de la sucursal
+        IF EXISTS (
+            SELECT 1 
+            FROM #TempCompras tc
+            LEFT JOIN Inventario i ON tc.id_producto = i.id_producto AND i.id_sucursal = @id_sucursal_empleado
+            WHERE i.id_producto IS NULL
+        )
+        BEGIN
+            DECLARE @productos_sin_inventario NVARCHAR(1000);
+            
+            SELECT @productos_sin_inventario = STRING_AGG(tc.id_producto, ', ')
+            FROM #TempCompras tc
+            LEFT JOIN Inventario i ON tc.id_producto = i.id_producto AND i.id_sucursal = @id_sucursal_empleado
+            WHERE i.id_producto IS NULL;
+            
+            RAISERROR('Error: Los siguientes productos no tienen inventario en esta sucursal: %s', 16, 1, @productos_sin_inventario);
             ROLLBACK TRANSACTION;
             RETURN;
         END
@@ -477,7 +470,7 @@ BEGIN
         BEGIN
             DECLARE @id_compra_actual INT;
 
-            -- Insertar cabecera de la compra para este proveedor (usando @id_sucursal_empleado)
+            -- Insertar cabecera de la compra para este proveedor
             INSERT INTO Compra (
                 fecha_compra, 
                 total, 
@@ -490,7 +483,7 @@ BEGIN
                 @total_proveedor_actual, 
                 @id_proveedor_actual, 
                 @id_empleado_gerente, 
-                @id_sucursal_empleado  -- Usamos la sucursal del empleado
+                @id_sucursal_empleado
             );
 
             SET @id_compra_actual = SCOPE_IDENTITY();
@@ -521,26 +514,15 @@ BEGIN
         CLOSE proveedor_cursor;
         DEALLOCATE proveedor_cursor;
 
-        -- Actualizar inventario (usando @id_sucursal_empleado)
-        MERGE Inventario AS target
-        USING (
-            SELECT 
-                @id_sucursal_empleado as id_sucursal,  -- Usamos la sucursal del empleado
-                tc.id_producto,
-                tc.cantidad
-            FROM #TempCompras tc
-        ) AS source
-        ON target.id_sucursal = source.id_sucursal 
-           AND target.id_producto = source.id_producto
-        WHEN MATCHED THEN
-            UPDATE SET 
-                stock_actual = target.stock_actual + source.cantidad,
-                ultima_actualizacion = GETDATE()
-        WHEN NOT MATCHED THEN
-            INSERT (id_sucursal, id_producto, stock_actual, stock_minimo, stock_maximo, ultima_actualizacion)
-            VALUES (source.id_sucursal, source.id_producto, source.cantidad, 10, 100, GETDATE());
+        -- Actualizar inventario (SOLO UPDATE - NO INSERT)
+        UPDATE Inventario 
+        SET 
+            stock_actual = stock_actual + tc.cantidad,
+            ultima_actualizacion = GETDATE()
+        FROM #TempCompras tc
+        INNER JOIN Inventario i ON tc.id_producto = i.id_producto AND i.id_sucursal = @id_sucursal_empleado;
 
-        -- Registrar en auditor�a de inventario (usando @id_sucursal_empleado)
+        -- Registrar en auditoría de inventario
         INSERT INTO AuditoriaInventario (
             id_producto, 
             id_sucursal, 
@@ -553,24 +535,23 @@ BEGIN
         )
         SELECT 
             tc.id_producto,
-            @id_sucursal_empleado,  -- Usamos la sucursal del empleado
+            @id_sucursal_empleado,
             GETDATE(),
             'Entrada',
             tc.cantidad,
-            ISNULL(i.stock_actual, 0),
-            ISNULL(i.stock_actual, 0) + tc.cantidad,
+            i.stock_actual,
+            i.stock_actual + tc.cantidad,
             @nombre_gerente
         FROM #TempCompras tc
-        LEFT JOIN Inventario i ON tc.id_producto = i.id_producto 
-                              AND i.id_sucursal = @id_sucursal_empleado;  -- Usamos la sucursal del empleado
+        INNER JOIN Inventario i ON tc.id_producto = i.id_producto AND i.id_sucursal = @id_sucursal_empleado;
 
         COMMIT TRANSACTION;
 
-        -- Retornar resumen general de la compra (incluyendo la sucursal autom�tica)
+        -- Retornar resumen general de la compra
         SELECT 
             @total_compra AS total_compra_general,
             @nombre_gerente AS gerente_responsable,
-            @id_sucursal_empleado AS id_sucursal,  -- Informamos qu� sucursal se us�
+            @id_sucursal_empleado AS id_sucursal,
             (SELECT nombre FROM Sucursal WHERE id_sucursal = @id_sucursal_empleado) AS nombre_sucursal,
             (SELECT COUNT(*) FROM #TempCompras) AS cantidad_productos,
             (SELECT SUM(cantidad) FROM #TempCompras) AS total_unidades,
@@ -594,11 +575,10 @@ BEGIN
             tc.costo_unitario,
             tc.subtotal,
             cpp.id_compra,
-            (ISNULL(i.stock_actual, 0) + tc.cantidad) AS nuevo_stock
+            (i.stock_actual + tc.cantidad) AS nuevo_stock
         FROM #TempCompras tc
         INNER JOIN #ComprasPorProveedor cpp ON tc.id_proveedor = cpp.id_proveedor
-        LEFT JOIN Inventario i ON tc.id_producto = i.id_producto 
-                              AND i.id_sucursal = @id_sucursal_empleado  -- Usamos la sucursal del empleado
+        INNER JOIN Inventario i ON tc.id_producto = i.id_producto AND i.id_sucursal = @id_sucursal_empleado
         ORDER BY tc.nombre_proveedor, tc.nombre_producto;
 
         -- Limpiar tablas temporales
@@ -701,9 +681,9 @@ EXEC sp_RealizarCompraStock
 	-- En el campo “costo” se debe registrar el costo unitario del producto pagado al proveedor.
 	-- Este valor debe ser menor que el precio registrado en la tabla “Producto”, ya que dicho precio corresponde al valor de venta al público.
     @productos_json = '[
-        {"id":1, "cantidad":20, "costo":1.00, "id_proveedor":1}, 
-        {"id":2, "cantidad":15, "costo":1.15, "id_proveedor":2},
-        {"id":3, "cantidad":30, "costo":0.75, "id_proveedor":3},
+        {"id":1, "cantidad":20, "costo":1.00}, 
+        {"id":2, "cantidad":15, "costo":1.15},
+        {"id":3, "cantidad":30, "costo":0.75}
     ]';
 GO
 
@@ -712,7 +692,6 @@ GO
 EXEC sp_RealizarCompraStock 
     @id_empleado_gerente = 5,
     @productos_json = '[
-        {"id":1, "cantidad":50, "costo":1.00, "id_proveedor":1},
-        {"id":11, "cantidad":30, "costo":1.10, "id_proveedor":1}
+        {"id":1, "cantidad":50, "costo":1.00}
     ]';
 GO
